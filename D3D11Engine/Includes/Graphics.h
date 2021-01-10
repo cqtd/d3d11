@@ -6,6 +6,7 @@
 #include <Windows.h>
 
 #include "Utils/Macro.h"
+#include "D3D.h"
 
 const bool FULL_SCREEN = false;
 const bool VSYNC_ENABLED = true;
@@ -26,6 +27,7 @@ private:
 	bool Render();
 
 private:
+	D3D* m_d3d;
 };
 
 #endif

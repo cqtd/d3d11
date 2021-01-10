@@ -116,7 +116,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
-      <SDLCheck>true</SDLCheck>
+      <SDLCheck>false</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
     </ClCompile>
@@ -142,12 +142,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Sources\D3D.cpp" />
     <ClCompile Include="Sources\Graphics.cpp" />
     <ClCompile Include="Sources\Input.cpp" />
     <ClCompile Include="Sources\System.cpp" />
     <ClCompile Include="Sources\WinMain.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Includes\D3D.h" />
     <ClInclude Include="Includes\Graphics.h" />
     <ClInclude Include="Includes\Input.h" />
     <ClInclude Include="Includes\System.h" />
