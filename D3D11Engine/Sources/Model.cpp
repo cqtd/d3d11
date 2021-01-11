@@ -4,6 +4,8 @@ Model::Model()
 {
 	m_vertexBuffer = nullptr;
 	m_indexBuffer = nullptr;
+
+	m_texture = nullptr;
 }
 
 Model::Model(const Model&)
@@ -14,7 +16,7 @@ Model::~Model()
 {
 }
 
-bool Model::Initialize(ID3D11Device* device)
+bool Model::Initialize(ID3D11Device* device, WCHAR* filename)
 {
 	bool result;
 
@@ -25,11 +27,18 @@ bool Model::Initialize(ID3D11Device* device)
 		return false;
 	}
 
+	result = LoadTexture(device, filename);
+	if (!result)
+	{
+		return false;
+	}
+
 	return true;
 }
 
 void Model::Shutdown()
 {
+	ReleaseTexture();
 	ShutdownBuffers();
 }
 
@@ -43,48 +52,77 @@ int Model::GetIndexCount()
 	return m_indexCount;
 }
 
+ID3D11ShaderResourceView* Model::GetTexture()
+{
+	return this->m_texture->GetTexture();
+}
+
+bool Model::LoadTexture(ID3D11Device* device, WCHAR* filename)
+{
+	bool result;
+
+	m_texture = new Texture;
+	if (!m_texture)
+	{
+		return false;
+	}
+
+	result = m_texture->Initialize(device, filename);
+	if (!result)
+	{
+		return false;
+	}
+
+	return true;
+}
+
+void Model::ReleaseTexture()
+{
+	if (m_texture)
+	{
+		m_texture->Shutdown();
+		delete m_texture;
+		m_texture = nullptr;
+	}
+}
+
 bool Model::InitializeBuffers(ID3D11Device* device)
 {
 	// 버텍스와 인덱스 포인터 (배열)
-	VertexType* vertices;
-	unsigned long* indices;
-
-	D3D11_BUFFER_DESC vertexBufferDesc, indexBufferDesc;
-	D3D11_SUBRESOURCE_DATA vertexData, indexData;
-
 	HRESULT result;
 
-	// 삼각형 그리기
+	// 삼각형
 	m_vertexCount = 3;
 	m_indexCount = 3;
 
-	vertices = new VertexType[m_vertexCount];
+	VertexType* vertices = new VertexType[m_vertexCount];
 	if (!vertices)
 	{
 		return false;
 	}
 
-	indices = new unsigned long[m_indexCount];
+	unsigned long* indices = new unsigned long[m_indexCount];
 	if (!indices)
 	{
 		return false;
 	}
 
 	// 버텍스 배열 데이터 채우기
-	vertices[0].position = D3DXVECTOR3(-1.0f, -1.0f, 0.0f);  // Bottom left.
-	vertices[0].color = D3DXVECTOR4(0.0f, 1.0f, 0.0f, 1.0f);
+	vertices[0].position = D3DXVECTOR3(-1.0f, -1.0f, 0.0f);
+	vertices[0].texture = D3DXVECTOR2(0.0f, 1.0f);
 
-	vertices[1].position = D3DXVECTOR3(0.0f, 1.0f, 0.0f);  // Top middle.
-	vertices[1].color = D3DXVECTOR4(0.0f, 1.0f, 0.0f, 1.0f);
+	vertices[1].position = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
+	vertices[1].texture = D3DXVECTOR2(0.5f, 0.0f);
 
-	vertices[2].position = D3DXVECTOR3(1.0f, -1.0f, 0.0f);  // Bottom right.
-	vertices[2].color = D3DXVECTOR4(0.0f, 1.0f, 0.0f, 1.0f);
+	vertices[2].position = D3DXVECTOR3(1.0f, -1.0f, 0.0f);
+	vertices[2].texture = D3DXVECTOR2(1.0f, 1.0f);
 
 	indices[0] = 0;
 	indices[1] = 1;
 	indices[2] = 2;
 
 	// 버텍스 버퍼 만들기
+	D3D11_BUFFER_DESC vertexBufferDesc;
 	vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
 	vertexBufferDesc.ByteWidth = sizeof(VertexType) * m_vertexCount;
 	vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
@@ -92,6 +130,7 @@ bool Model::InitializeBuffers(ID3D11Device* device)
 	vertexBufferDesc.MiscFlags = 0;
 	vertexBufferDesc.StructureByteStride = 0;
 
+	D3D11_SUBRESOURCE_DATA vertexData;
 	vertexData.pSysMem = vertices;
 	vertexData.SysMemPitch = 0;
 	vertexData.SysMemSlicePitch = 0;
@@ -103,6 +142,8 @@ bool Model::InitializeBuffers(ID3D11Device* device)
 	}
 
 	// 인덱스 버퍼
+	D3D11_BUFFER_DESC indexBufferDesc;
+	
 	indexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
 	indexBufferDesc.ByteWidth = sizeof(unsigned long) * m_indexCount;
 	indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
@@ -110,6 +151,7 @@ bool Model::InitializeBuffers(ID3D11Device* device)
 	indexBufferDesc.MiscFlags = 0;
 	indexBufferDesc.StructureByteStride = 0;
 
+	D3D11_SUBRESOURCE_DATA  indexData;
 	indexData.pSysMem = indices;
 	indexData.SysMemPitch = 0;
 	indexData.SysMemSlicePitch = 0;

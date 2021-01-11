@@ -48,6 +48,12 @@
     <ClCompile Include="Sources\Model.cpp">
       <Filter>Source Files\Graphics</Filter>
     </ClCompile>
+    <ClCompile Include="Sources\Texture.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\TextureShader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Includes\System.h">
@@ -74,6 +80,12 @@
     <ClInclude Include="Includes\Model.h">
       <Filter>Header Files\Graphics</Filter>
     </ClInclude>
+    <ClInclude Include="Includes\Texture.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\TextureShader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="cpp.hint" />
@@ -81,6 +93,12 @@
       <Filter>Shader Files</Filter>
     </None>
     <None Include="Shaders\color.vs">
+      <Filter>Shader Files</Filter>
+    </None>
+    <None Include="Shaders\texture.vs">
+      <Filter>Shader Files</Filter>
+    </None>
+    <None Include="Shaders\texture.ps">
       <Filter>Shader Files</Filter>
     </None>
   </ItemGroup>

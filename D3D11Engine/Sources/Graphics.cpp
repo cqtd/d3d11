@@ -5,7 +5,9 @@ Graphics::Graphics()
 	m_d3d = nullptr;
 	m_camera = nullptr;
 	m_model = nullptr;
-	m_colorShader = nullptr;
+	
+	//m_colorShader = nullptr;
+	m_textureShader = nullptr;
 }
 
 Graphics::Graphics(const Graphics&)
@@ -48,36 +50,57 @@ bool Graphics::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		return false;
 	}
 
-	result = m_model->Initialize(m_d3d->GetDevice());
+	WCHAR tex[] = L"Textures/seafloor.dds";
+	result = m_model->Initialize(m_d3d->GetDevice(), tex);
 	if (!result)
 	{
 		MessageBox(hwnd, L"Model 초기화에 실패했습니다.", L"오류", MB_OK);
 		return false;
 	}
 
-	m_colorShader = new ColorShader;
-	if (!m_colorShader)
+	//m_colorShader = new ColorShader;
+	//if (!m_colorShader)
+	//{
+	//	return false;
+	//}
+
+	//result = m_colorShader->Initialize(m_d3d->GetDevice(), hwnd);
+	//if (!result)
+	//{
+	//	MessageBox(hwnd, L"ColorShader 초기화에 실패했습니다.", L"오류", MB_OK);
+	//	return false;
+	//}
+
+	m_textureShader = new TextureShader;
+	if (!m_textureShader)
 	{
 		return false;
 	}
 
-	result = m_colorShader->Initialize(m_d3d->GetDevice(), hwnd);
+	result = m_textureShader->Initialize(m_d3d->GetDevice(), hwnd);
 	if (!result)
 	{
-		MessageBox(hwnd, L"ColorShader 초기화에 실패했습니다.", L"오류", MB_OK);
+		MessageBox(hwnd, L"TextureShader 초기화에 실패했습니다.", L"오류", MB_OK);
 		return false;
 	}
-	
+		
 	return true;
 }
 
 void Graphics::Shutdown()
 {
-	if (m_colorShader)
+	//if (m_colorShader)
+	//{
+	//	m_colorShader->Shutdown();
+	//	delete m_colorShader;
+	//	m_colorShader = nullptr;
+	//}
+
+	if (m_textureShader)
 	{
-		m_colorShader->Shutdown();
-		delete m_colorShader;
-		m_colorShader = nullptr;
+		m_textureShader->Shutdown();
+		delete m_textureShader;
+		m_textureShader = nullptr;
 	}
 
 	if (m_model)
@@ -129,8 +152,11 @@ bool Graphics::Render()
 
 	m_model->Render(m_d3d->GetDeviceContext());
 
-	result = m_colorShader->Render(m_d3d->GetDeviceContext(), m_model->GetIndexCount(),
-		world, view, projection);
+	//result = m_colorShader->Render(m_d3d->GetDeviceContext(), m_model->GetIndexCount(),
+	//	world, view, projection);
+
+	result = m_textureShader->Render(m_d3d->GetDeviceContext(), m_model->GetIndexCount(),
+		world, view, projection, m_model->GetTexture());
 
 	if (!result)
 	{
