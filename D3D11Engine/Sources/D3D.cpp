@@ -227,7 +227,7 @@ bool D3D::Initialize(int screenWidth, int screenHeight,
 	}
 
 	// 백버퍼 포인터 가져오기
-	result = m_swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&backBufferPtr);
+	result = m_swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&backBufferPtr);
 	if (FAILED(result))
 	{
 		return false;
@@ -332,6 +332,7 @@ bool D3D::Initialize(int screenWidth, int screenHeight,
 	rasterDesc.FillMode = D3D11_FILL_SOLID;
 	rasterDesc.FrontCounterClockwise = false;
 	rasterDesc.MultisampleEnable = false;
+	rasterDesc.ScissorEnable = false;
 	rasterDesc.SlopeScaledDepthBias = 0.0f;
 
 	// 디바이스에서 생성
@@ -363,7 +364,7 @@ bool D3D::Initialize(int screenWidth, int screenHeight,
 	screenAspect = (float)screenWidth / (float)screenHeight;
 
 	// 3d 렌더링을 위한 프로젝션 매트릭스 생성
-	D3DXMatrixPerspectiveLH(&m_projectionMatrix, fieldOfView, screenAspect, screenNear, screenDepth);
+	D3DXMatrixPerspectiveFovLH(&m_projectionMatrix, fieldOfView, screenAspect, screenNear, screenDepth);
 
 	// 월드 매트릭스를 아이덴티티로
 	D3DXMatrixIdentity(&m_worldMatrix);

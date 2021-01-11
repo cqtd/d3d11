@@ -7,6 +7,9 @@
 
 #include "Utils/Macro.h"
 #include "D3D.h"
+#include "Camera.h"
+#include "Model.h"
+#include "ColorShader.h"
 
 const bool FULL_SCREEN = false;
 const bool VSYNC_ENABLED = true;
@@ -28,6 +31,9 @@ private:
 
 private:
 	D3D* m_d3d;
+	Camera* m_camera;
+	Model* m_model;
+	ColorShader* m_colorShader;
 };
 
 #endif

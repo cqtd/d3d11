@@ -184,6 +184,12 @@ void System::InitializeWindows(int& screenWidth, int& screenHeight)
 		// 풀스크린이면 최대 크기는 32비트 데스크톱
 		memset(&dmScreenSettings, 0, sizeof(dmScreenSettings));
 
+		if (FORCE_RESOLUTION)
+		{
+			screenWidth = 3840;
+			screenHeight = 2160;
+		}
+
 		dmScreenSettings.dmSize = sizeof(dmScreenSettings);
 		dmScreenSettings.dmPelsWidth = (unsigned long)screenWidth;
 		dmScreenSettings.dmPelsHeight = (unsigned long)screenHeight;
@@ -199,8 +205,8 @@ void System::InitializeWindows(int& screenWidth, int& screenHeight)
 	else
 	{
 		// 1280 720 으로 설정
-		screenWidth = 1280;
-		screenHeight = 720;
+		screenWidth = 800;
+		screenHeight = 600;
 
 		// 화면 중앙에 놓기
 		// 모니터가 여러개라 강제지정
@@ -218,8 +224,11 @@ void System::InitializeWindows(int& screenWidth, int& screenHeight)
 			
 		}
 
-		posX = (sizeX - screenWidth) / 2;
-		posY = (sizeY - screenHeight) / 2;
+		//posX = (sizeX - screenWidth) / 2;
+		//posY = (sizeY - screenHeight) / 2;
+
+		posX = (GetSystemMetrics(SM_CXSCREEN) - screenWidth) / 2;
+		posY = (GetSystemMetrics(SM_CYSCREEN) - screenHeight) / 2;
 	}
 
 	m_hwnd = CreateWindowEx(

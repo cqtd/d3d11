@@ -13,7 +13,7 @@
 #include "Utils/Macro.h"
 
 const bool ALLOW_CONSOLE = false;
-const bool FORCE_RESOLUTION = true;
+const bool FORCE_RESOLUTION = false;
 
 class System
 {
