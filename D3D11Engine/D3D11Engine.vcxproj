@@ -147,6 +147,8 @@
     <ClCompile Include="Sources\D3D.cpp" />
     <ClCompile Include="Sources\Graphics.cpp" />
     <ClCompile Include="Sources\Input.cpp" />
+    <ClCompile Include="Sources\Light.cpp" />
+    <ClCompile Include="Sources\LightShader.cpp" />
     <ClCompile Include="Sources\Model.cpp" />
     <ClCompile Include="Sources\System.cpp" />
     <ClCompile Include="Sources\Texture.cpp" />
@@ -159,6 +161,8 @@
     <ClInclude Include="Includes\D3D.h" />
     <ClInclude Include="Includes\Graphics.h" />
     <ClInclude Include="Includes\Input.h" />
+    <ClInclude Include="Includes\Light.h" />
+    <ClInclude Include="Includes\LightShader.h" />
     <ClInclude Include="Includes\Model.h" />
     <ClInclude Include="Includes\System.h" />
     <ClInclude Include="Includes\Texture.h" />
@@ -169,6 +173,8 @@
     <None Include="cpp.hint" />
     <None Include="Shaders\color.ps" />
     <None Include="Shaders\color.vs" />
+    <None Include="Shaders\light.ps" />
+    <None Include="Shaders\light.vs" />
     <None Include="Shaders\texture.ps" />
     <None Include="Shaders\texture.vs" />
   </ItemGroup>

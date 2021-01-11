@@ -7,7 +7,9 @@ Graphics::Graphics()
 	m_model = nullptr;
 	
 	//m_colorShader = nullptr;
-	m_textureShader = nullptr;
+	//m_textureShader = nullptr;
+	m_lightShader = nullptr;
+	m_light = nullptr;
 }
 
 Graphics::Graphics(const Graphics&)
@@ -71,19 +73,41 @@ bool Graphics::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	//	return false;
 	//}
 
-	m_textureShader = new TextureShader;
-	if (!m_textureShader)
+	//m_textureShader = new TextureShader;
+	//if (!m_textureShader)
+	//{
+	//	return false;
+	//}
+
+	//result = m_textureShader->Initialize(m_d3d->GetDevice(), hwnd);
+	//if (!result)
+	//{
+	//	MessageBox(hwnd, L"TextureShader 초기화에 실패했습니다.", L"오류", MB_OK);
+	//	return false;
+	//}
+
+	m_lightShader = new LightShader;
+	if (!m_lightShader)
 	{
 		return false;
 	}
 
-	result = m_textureShader->Initialize(m_d3d->GetDevice(), hwnd);
+	result = m_lightShader->Initialize(m_d3d->GetDevice(), hwnd);
 	if (!result)
 	{
-		MessageBox(hwnd, L"TextureShader 초기화에 실패했습니다.", L"오류", MB_OK);
+		MessageBox(hwnd, L"Light Shader 초기화에 실패했습니다.", L"Error", MB_OK);
 		return false;
 	}
-		
+
+	m_light = new Light;
+	if (!m_light)
+	{
+		return false;
+	}
+
+	m_light->SetDiffuseColor(1.0f, 0.0f, 1.0f, 1.0f);
+	m_light->SetDirection(0.0f, 0.0f, 1.0f);
+
 	return true;
 }
 
@@ -96,13 +120,27 @@ void Graphics::Shutdown()
 	//	m_colorShader = nullptr;
 	//}
 
-	if (m_textureShader)
+	//if (m_textureShader)
+	//{
+	//	m_textureShader->Shutdown();
+	//	delete m_textureShader;
+	//	m_textureShader = nullptr;
+	//}
+
+	if (m_light)
 	{
-		m_textureShader->Shutdown();
-		delete m_textureShader;
-		m_textureShader = nullptr;
+		delete m_light;
+		m_light = nullptr;
 	}
 
+	// Release the light shader object.
+	if (m_lightShader)
+	{
+		m_lightShader->Shutdown();
+		delete m_lightShader;
+		m_lightShader = nullptr;
+	}
+	
 	if (m_model)
 	{
 		m_model->Shutdown();
@@ -128,7 +166,16 @@ bool Graphics::Frame()
 {
 	bool result;
 
-	result = Render();
+	static float rotation = 0.0f;
+
+	// 매 프레임 로테이션 업데이트
+	rotation += (float)D3DX_PI * 0.01f;
+	if (rotation > 360.0f)
+	{
+		rotation -= 360.0f;
+	}
+
+	result = Render(rotation);
 	if (!result)
 	{
 		return false;
@@ -137,7 +184,7 @@ bool Graphics::Frame()
 	return true;
 }
 
-bool Graphics::Render()
+bool Graphics::Render(float rotation)
 {
 	D3DXMATRIX view, world, projection;
 	bool result;
@@ -150,13 +197,18 @@ bool Graphics::Render()
 	m_d3d->GetWorldMatrix(world);
 	m_d3d->GetProjectionMatrix(projection);
 
+	D3DXMatrixRotationY(&world, rotation);
+
 	m_model->Render(m_d3d->GetDeviceContext());
 
 	//result = m_colorShader->Render(m_d3d->GetDeviceContext(), m_model->GetIndexCount(),
 	//	world, view, projection);
 
-	result = m_textureShader->Render(m_d3d->GetDeviceContext(), m_model->GetIndexCount(),
-		world, view, projection, m_model->GetTexture());
+	//result = m_textureShader->Render(m_d3d->GetDeviceContext(), m_model->GetIndexCount(),
+	//	world, view, projection, m_model->GetTexture());
+
+	result = m_lightShader->Render(m_d3d->GetDeviceContext(), m_model->GetIndexCount(),
+		world, view, projection, m_model->GetTexture(), m_light->GetDirection(), m_light->GetDiffuseColor());
 
 	if (!result)
 	{

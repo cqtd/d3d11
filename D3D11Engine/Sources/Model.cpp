@@ -110,13 +110,16 @@ bool Model::InitializeBuffers(ID3D11Device* device)
 	// 버텍스 배열 데이터 채우기
 	vertices[0].position = D3DXVECTOR3(-1.0f, -1.0f, 0.0f);
 	vertices[0].texture = D3DXVECTOR2(0.0f, 1.0f);
+	vertices[0].normal = D3DXVECTOR3(0.0f, 0.0f, -1.0f);
 
 	vertices[1].position = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
 	vertices[1].texture = D3DXVECTOR2(0.5f, 0.0f);
-
+	vertices[1].normal = D3DXVECTOR3(0.0f, 0.0f, -1.0f);
+	
 	vertices[2].position = D3DXVECTOR3(1.0f, -1.0f, 0.0f);
 	vertices[2].texture = D3DXVECTOR2(1.0f, 1.0f);
-
+	vertices[2].normal = D3DXVECTOR3(0.0f, 0.0f, -1.0f);
+	
 	indices[0] = 0;
 	indices[1] = 1;
 	indices[2] = 2;

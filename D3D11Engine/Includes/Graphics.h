@@ -10,7 +10,9 @@
 #include "Camera.h"
 #include "Model.h"
 //#include "ColorShader.h"
-#include "TextureShader.h"
+//#include "TextureShader.h"
+#include "LightShader.h"
+#include "Light.h"
 
 const bool FULL_SCREEN = false;
 const bool VSYNC_ENABLED = true;
@@ -28,7 +30,7 @@ public:
 	bool Frame();
 
 private:
-	bool Render();
+	bool Render(float);
 
 private:
 	D3D* m_d3d;
@@ -36,7 +38,9 @@ private:
 	Model* m_model;
 	
 	//ColorShader* m_colorShader;
-	TextureShader* m_textureShader;
+	//TextureShader* m_textureShader;
+	LightShader* m_lightShader;
+	Light* m_light;
 };
 
 #endif
