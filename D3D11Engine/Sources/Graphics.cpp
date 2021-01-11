@@ -1,4 +1,4 @@
-#include "Graphics.h"
+ï»¿#include "Graphics.h"
 
 Graphics::Graphics()
 {
@@ -34,7 +34,7 @@ bool Graphics::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		hwnd, FULL_SCREEN, SCREEN_DEPTH, SCREEN_NEAR);
 	if (!result)
 	{
-		MessageBox(hwnd, L"Direct3D ÃÊ±âÈ­¿¡ ½ÇÆÐÇß½À´Ï´Ù.", L"¿À·ù", MB_OK);
+		MessageBox(hwnd, L"Direct3D ì´ˆê¸°í™”ì— ì‹¤íŒ¨í–ˆìŠµë‹ˆë‹¤.", L"ì˜¤ë¥˜", MB_OK);
 		return false;
 	}
 
@@ -52,11 +52,13 @@ bool Graphics::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		return false;
 	}
 
+	char* mesh = (char*)"Meshes/cube.txt";
 	WCHAR tex[] = L"Textures/seafloor.dds";
-	result = m_model->Initialize(m_d3d->GetDevice(), tex);
+	
+	result = m_model->Initialize(m_d3d->GetDevice(), mesh, tex);
 	if (!result)
 	{
-		MessageBox(hwnd, L"Model ÃÊ±âÈ­¿¡ ½ÇÆÐÇß½À´Ï´Ù.", L"¿À·ù", MB_OK);
+		MessageBox(hwnd, L"Model ì´ˆê¸°í™”ì— ì‹¤íŒ¨í–ˆìŠµë‹ˆë‹¤.", L"ì˜¤ë¥˜", MB_OK);
 		return false;
 	}
 
@@ -69,7 +71,7 @@ bool Graphics::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	//result = m_colorShader->Initialize(m_d3d->GetDevice(), hwnd);
 	//if (!result)
 	//{
-	//	MessageBox(hwnd, L"ColorShader ÃÊ±âÈ­¿¡ ½ÇÆÐÇß½À´Ï´Ù.", L"¿À·ù", MB_OK);
+	//	MessageBox(hwnd, L"ColorShader ì´ˆê¸°í™”ì— ì‹¤íŒ¨í–ˆìŠµë‹ˆë‹¤.", L"ì˜¤ë¥˜", MB_OK);
 	//	return false;
 	//}
 
@@ -82,7 +84,7 @@ bool Graphics::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	//result = m_textureShader->Initialize(m_d3d->GetDevice(), hwnd);
 	//if (!result)
 	//{
-	//	MessageBox(hwnd, L"TextureShader ÃÊ±âÈ­¿¡ ½ÇÆÐÇß½À´Ï´Ù.", L"¿À·ù", MB_OK);
+	//	MessageBox(hwnd, L"TextureShader ì´ˆê¸°í™”ì— ì‹¤íŒ¨í–ˆìŠµë‹ˆë‹¤.", L"ì˜¤ë¥˜", MB_OK);
 	//	return false;
 	//}
 
@@ -95,7 +97,7 @@ bool Graphics::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	result = m_lightShader->Initialize(m_d3d->GetDevice(), hwnd);
 	if (!result)
 	{
-		MessageBox(hwnd, L"Light Shader ÃÊ±âÈ­¿¡ ½ÇÆÐÇß½À´Ï´Ù.", L"Error", MB_OK);
+		MessageBox(hwnd, L"Light Shader ì´ˆê¸°í™”ì— ì‹¤íŒ¨í–ˆìŠµë‹ˆë‹¤.", L"Error", MB_OK);
 		return false;
 	}
 
@@ -105,7 +107,7 @@ bool Graphics::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		return false;
 	}
 
-	m_light->SetDiffuseColor(1.0f, 0.0f, 1.0f, 1.0f);
+	m_light->SetDiffuseColor(1.0f, 1.0f, 1.0f, 1.0f);
 	m_light->SetDirection(0.0f, 0.0f, 1.0f);
 
 	return true;
@@ -168,7 +170,7 @@ bool Graphics::Frame()
 
 	static float rotation = 0.0f;
 
-	// ¸Å ÇÁ·¹ÀÓ ·ÎÅ×ÀÌ¼Ç ¾÷µ¥ÀÌÆ®
+	// ë§¤ í”„ë ˆìž„ ë¡œí…Œì´ì…˜ ì—…ë°ì´íŠ¸
 	rotation += (float)D3DX_PI * 0.01f;
 	if (rotation > 360.0f)
 	{
