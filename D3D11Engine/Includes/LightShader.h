@@ -22,14 +22,19 @@ private:
 		D3DXMATRIX projection;
 	};
 
+	struct CameraBufferType
+	{
+		D3DXVECTOR3 cameraPosition;
+		float padding;
+	};
+
 	struct LightBufferType
 	{
 		D3DXVECTOR4 ambientColor;
 		D3DXVECTOR4 diffuseColor;
 		D3DXVECTOR3 lightDirection;
-
-		// 16
-		float padding;
+		float specularPower;
+		D3DXVECTOR4 specularColor;
 	};
 	
 public:
@@ -41,7 +46,8 @@ public:
 	bool Render(ID3D11DeviceContext* deviceContext, int indexCount,
 		D3DXMATRIX world, D3DXMATRIX view, D3DXMATRIX projection,
 		ID3D11ShaderResourceView* texture, D3DXVECTOR3 lightDir, 
-		D3DXVECTOR4 ambientColor, D3DXVECTOR4 diffuseColor);
+		D3DXVECTOR4 ambientColor, D3DXVECTOR4 diffuseColor, 
+		D3DXVECTOR3 cameraPosition, D3DXVECTOR4 specularColor, float specularPower);
 
 private:
 	bool InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* vsFilename, WCHAR* psFilename);
@@ -52,7 +58,8 @@ private:
 		D3DXMATRIX world, D3DXMATRIX view, D3DXMATRIX projection,
 		ID3D11ShaderResourceView* texture,
 		D3DXVECTOR3 lightDir, 
-		D3DXVECTOR4 ambientColor, D3DXVECTOR4 diffuseColor);
+		D3DXVECTOR4 ambientColor, D3DXVECTOR4 diffuseColor, 
+		D3DXVECTOR3 cameraPosition, D3DXVECTOR4 specularColor, float specularPower);
 	void RenderShader(ID3D11DeviceContext* deviceContext, int indexCount);
 
 private:
@@ -62,6 +69,7 @@ private:
 	ID3D11SamplerState* m_sampleState;
 	ID3D11Buffer* m_matrixBuffer;
 
+	ID3D11Buffer* m_cameraBuffer;
 	ID3D11Buffer* m_lightBuffer;
 };
 
