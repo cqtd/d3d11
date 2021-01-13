@@ -24,6 +24,7 @@ private:
 
 	struct LightBufferType
 	{
+		D3DXVECTOR4 ambientColor;
 		D3DXVECTOR4 diffuseColor;
 		D3DXVECTOR3 lightDirection;
 
@@ -39,7 +40,8 @@ public:
 	void Shutdown();
 	bool Render(ID3D11DeviceContext* deviceContext, int indexCount,
 		D3DXMATRIX world, D3DXMATRIX view, D3DXMATRIX projection,
-		ID3D11ShaderResourceView* texture, D3DXVECTOR3 lightDir, D3DXVECTOR4 diffuseColor);
+		ID3D11ShaderResourceView* texture, D3DXVECTOR3 lightDir, 
+		D3DXVECTOR4 ambientColor, D3DXVECTOR4 diffuseColor);
 
 private:
 	bool InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* vsFilename, WCHAR* psFilename);
@@ -49,7 +51,8 @@ private:
 	bool SetShaderParameters(ID3D11DeviceContext* deviceContext,
 		D3DXMATRIX world, D3DXMATRIX view, D3DXMATRIX projection,
 		ID3D11ShaderResourceView* texture,
-		D3DXVECTOR3 lightDir, D3DXVECTOR4 diffuseColor);
+		D3DXVECTOR3 lightDir, 
+		D3DXVECTOR4 ambientColor, D3DXVECTOR4 diffuseColor);
 	void RenderShader(ID3D11DeviceContext* deviceContext, int indexCount);
 
 private:

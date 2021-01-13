@@ -40,11 +40,12 @@ void LightShader::Shutdown()
 }
 
 bool LightShader::Render(ID3D11DeviceContext* deviceContext, int indexCount, D3DXMATRIX world, D3DXMATRIX view,
-	D3DXMATRIX projection, ID3D11ShaderResourceView* texture, D3DXVECTOR3 lightDir, D3DXVECTOR4 diffuseColor)
+	D3DXMATRIX projection, ID3D11ShaderResourceView* texture, D3DXVECTOR3 lightDir, 
+	D3DXVECTOR4 ambientColor, D3DXVECTOR4 diffuseColor)
 {
 	bool result;
 
-	result = SetShaderParameters(deviceContext, world, view, projection, texture, lightDir, diffuseColor);
+	result = SetShaderParameters(deviceContext, world, view, projection, texture, lightDir, ambientColor, diffuseColor);
 	if (!result)
 	{
 		return false;
@@ -65,7 +66,7 @@ bool LightShader::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* vsFil
 	D3D11_INPUT_ELEMENT_DESC polygonLayout[3];
 
 	/*
-	 * ½¦ÀÌ´õ ÄÄÆÄÀÏ
+	 * ì‰ì´ë” ì»´íŒŒì¼
 	 */
 	
 	result = D3DX11CompileFromFile(vsFilename, nullptr, nullptr, "LightVertexShader", "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, nullptr,
@@ -78,7 +79,7 @@ bool LightShader::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* vsFil
 		}
 		else
 		{
-			MessageBox(hwnd, vsFilename, L"½¦ÀÌ´õ ÆÄÀÏÀ» Ã£À» ¼ö ¾øÀ½", MB_OK);
+			MessageBox(hwnd, vsFilename, L"ì‰ì´ë” íŒŒì¼ì„ ì°¾ì„ ìˆ˜ ì—†ìŒ", MB_OK);
 		}
 
 		return false;
@@ -94,14 +95,14 @@ bool LightShader::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* vsFil
 		}
 		else
 		{
-			MessageBox(hwnd, psFilename, L"½¦ÀÌ´õ ÆÄÀÏÀ» Ã£À» ¼ö ¾øÀ½", MB_OK);
+			MessageBox(hwnd, psFilename, L"ì‰ì´ë” íŒŒì¼ì„ ì°¾ì„ ìˆ˜ ì—†ìŒ", MB_OK);
 		}
 
 		return false;
 	}
 
 	/*
-	 * ½¦ÀÌ´õ »ı¼º
+	 * ì‰ì´ë” ìƒì„±
 	 */
 
 	result = device->CreateVertexShader(vertexShaderBuffer->GetBufferPointer(), vertexShaderBuffer->GetBufferSize(), nullptr, &m_vertexShader);
@@ -117,7 +118,7 @@ bool LightShader::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* vsFil
 	}
 
 	/*
-	 * ·¹ÀÌ¾Æ¿ô
+	 * ë ˆì´ì•„ì›ƒ
 	 */
 
 	polygonLayout[0].SemanticName = "POSITION";
@@ -144,10 +145,10 @@ bool LightShader::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* vsFil
 	polygonLayout[2].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
 	polygonLayout[2].InstanceDataStepRate = 0;
 
-	// ¹è¿­ ±æÀÌ
+	// ë°°ì—´ ê¸¸ì´
 	unsigned int numElements = sizeof(polygonLayout) / sizeof(polygonLayout[0]);
 
-	// ·¹ÀÌ¾Æ¿ô »ı¼º
+	// ë ˆì´ì•„ì›ƒ ìƒì„±
 	result = device->CreateInputLayout(polygonLayout, numElements, vertexShaderBuffer->GetBufferPointer(), vertexShaderBuffer->GetBufferSize(),
 		&m_layout);
 	if (FAILED(result))
@@ -276,11 +277,12 @@ void LightShader::OutputShaderErrorMessage(ID3D10Blob* errorMessage, HWND hwnd, 
 	errorMessage = nullptr;
 
 	// Pop a message up on the screen to notify the user to check the text file for compile errors.
-	MessageBox(hwnd, L"½¦ÀÌ´õ ÄÄÆÄÀÏ ¿¡·¯. shader-error.txt¸¦ È®ÀÎÇÏ¼¼¿ä.", filename, MB_OK);
+	MessageBox(hwnd, L"ì‰ì´ë” ì»´íŒŒì¼ ì—ëŸ¬. shader-error.txtë¥¼ í™•ì¸í•˜ì„¸ìš”.", filename, MB_OK);
 }
 
 bool LightShader::SetShaderParameters(ID3D11DeviceContext* deviceContext, D3DXMATRIX world, D3DXMATRIX view,
-	D3DXMATRIX projection, ID3D11ShaderResourceView* texture, D3DXVECTOR3 lightDir, D3DXVECTOR4 diffuseColor)
+	D3DXMATRIX projection, ID3D11ShaderResourceView* texture, D3DXVECTOR3 lightDir,
+	D3DXVECTOR4 ambientColor, D3DXVECTOR4 diffuseColor)
 {
 	HRESULT result;
 
@@ -321,6 +323,7 @@ bool LightShader::SetShaderParameters(ID3D11DeviceContext* deviceContext, D3DXMA
 
 	dataPtr2 = (LightBufferType*)mappedResource.pData;
 
+	dataPtr2->ambientColor = ambientColor;
 	dataPtr2->diffuseColor = diffuseColor;
 	dataPtr2->lightDirection = lightDir;
 	dataPtr2->padding = 0.0f;

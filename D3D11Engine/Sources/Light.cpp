@@ -12,6 +12,16 @@ Light::~Light()
 {
 }
 
+void Light::SetAmbientColor(float red, float green, float blue, float alpha)
+{
+	m_ambientColor = D3DXVECTOR4(red, green, blue, alpha);
+}
+
+D3DXVECTOR4 Light::GetAmbientColor()
+{
+	return this->m_ambientColor;
+}
+
 void Light::SetDiffuseColor(float red, float green, float blue, float alpha)
 {
 	m_diffuseColor = D3DXVECTOR4(red, green, blue, alpha);

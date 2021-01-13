@@ -1,4 +1,4 @@
-﻿#include "Graphics.h"
+#include "Graphics.h"
 
 Graphics::Graphics()
 {
@@ -107,8 +107,9 @@ bool Graphics::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		return false;
 	}
 
+	m_light->SetAmbientColor(0.15f, 0.15f, 0.15f, 1.0f);
 	m_light->SetDiffuseColor(1.0f, 1.0f, 1.0f, 1.0f);
-	m_light->SetDirection(0.0f, 0.0f, 1.0f);
+	m_light->SetDirection(1.0f, 0.0f, 0.0f);
 
 	return true;
 }
@@ -171,7 +172,7 @@ bool Graphics::Frame()
 	static float rotation = 0.0f;
 
 	// 매 프레임 로테이션 업데이트
-	rotation += (float)D3DX_PI * 0.01f;
+	rotation += (float)D3DX_PI * 0.005f;
 	if (rotation > 360.0f)
 	{
 		rotation -= 360.0f;
@@ -210,7 +211,8 @@ bool Graphics::Render(float rotation)
 	//	world, view, projection, m_model->GetTexture());
 
 	result = m_lightShader->Render(m_d3d->GetDeviceContext(), m_model->GetIndexCount(),
-		world, view, projection, m_model->GetTexture(), m_light->GetDirection(), m_light->GetDiffuseColor());
+		world, view, projection, m_model->GetTexture(), m_light->GetDirection(),
+		m_light->GetAmbientColor(), m_light->GetDiffuseColor());
 
 	if (!result)
 	{
